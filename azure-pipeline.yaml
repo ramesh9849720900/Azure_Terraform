@@ -1,0 +1,30 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  azureSubscription: 'Terraform_Subscription_Connection'
+  resourceGroupName: 'terraform_resource_group'
+  appServicePlanName: 'example-service-plan'
+  webAppName: 'webapp9849'
+  location: 'East US'
+  storageAccountName: 'terraform9849'
+  containerName: 'terraformblob'
+  stateFileName: 'terraform.tfstate'
+
+steps:
+- task: UseTerraform@0
+  inputs:
+    command: 'init'
+    backendServiceArm: $(azureSubscription)
+    backendAzureRmResourceGroupName: '$(resourceGroupName)'
+    backendAzureRmStorageAccountName: '$(storageAccountName)'
+    backendAzureRmContainerName: '$(containerName)'
+    backendAzureRmKey: '$(stateFileName)'
+
+- task: UseTerraform@0
+  inputs:
+    command: 'apply'
+    arguments: '-auto-approve'
